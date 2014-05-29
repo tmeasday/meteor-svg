@@ -1,0 +1,14 @@
+#graph1 > rect {
+  fill: gray;
+  stroke: black;
+}
+
+#graph1 > polygon {
+  fill: blue;
+}
+
+#graph1 > polyline {
+  stroke: black;
+  fill: none;
+  stroke-width: 2;
+}

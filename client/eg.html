@@ -1,0 +1,17 @@
+<template name="eg">
+  <div class="eg">
+    <h2>Engagement Graph</h2>
+    <select>
+      <option value="engagement" {{selected 'engagement'}}>Engagement</option>
+      <option value="response" {{selected 'response'}}>Responses</option>
+      <option value="comment" {{selected 'comment'}}>Comments</option>
+      <option value="helpful" {{selected 'helpful'}}>Helpfuls</option>
+    </select>
+
+    <div class="container">
+      <div class="y-axis"></div>
+      <div class="chart"></div>
+      <!--div class="x-axis"></div-->
+    </div>
+  </div>
+</template>

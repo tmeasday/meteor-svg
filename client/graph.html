@@ -1,0 +1,67 @@
+<!-- Graph with some axis -->
+
+<template name="graph">
+{{#with rawData}}
+{{#with mappedData}}
+<div class="graph">
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+       viewBox="0, 0, {{totalWidth}}, {{totalHeight}}">
+  
+   <defs>
+     <clipPath id="chartClip">
+       <rect width="{{dimensions.width}}" height="{{dimensions.height}}"/>
+     </clipPath>
+   </defs>
+       
+    <g class="chart" transform="translate({{padding}}, {{padding}})">
+      <!-- For temp. visual testing -->
+      <!--rect width="{{dimensions.width}}" height="{{dimensions.height}}"/-->
+      
+      {{#each series}}
+        <path class="area {{name}}" d="{{paths.area}}" />
+        <path class="line {{name}}" d="{{paths.line}}" />
+      {{/each}}
+      
+      {{#each hoverRegions}}
+        {{> graphHoverRegion}}
+      {{/each}}
+    </g>
+    
+    <g class="y-axis" transform="translate(0, {{padding}})">
+      {{#each yTicks}}
+        {{> graphYTick}}
+      {{/each}}
+    </g>
+
+    <g class="x-axis" transform="translate({{padding}}, {{totalHeight}})">
+      {{#each xTicks}}
+        {{> graphXTick}}
+      {{/each}}
+    </g>
+  </svg>
+</div>
+{{/with}}
+{{/with}}
+</template>
+
+<template name="graphYTick">
+  <line x1="0" x2="{{size}}" y1="{{y}}" y2="{{y}}"/>
+  <text x="{{size}}" y="{{y}}" dx="2" alignment-baseline="central">
+    {{label}}
+  </text>
+</template>
+
+<template name="graphXTick">
+  <line x1="{{x}}" x2="{{x}}" y1="0" y2="-{{size}}" />
+  <text x="{{x}}" y="0" dy="-9" text-anchor="middle">
+    {{label}}
+  </text>
+</template>
+
+<template name="graphHoverRegion">
+  <g class="hover-region" data-data="{{data}}">
+    <line class="boundary" x1="{{x}}" x2="{{x}}" y1="0" y2="{{height}}" 
+          stroke-width="{{boundaryWidth}}" clip-path="url(#chartClip)"/>
+    <line class="line" x1="{{x}}" x2="{{x}}" y1="0" y2="{{height}}" />
+  </g>
+</template>

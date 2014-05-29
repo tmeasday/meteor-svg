@@ -1,0 +1,69 @@
+.graph {
+  stroke: gray;
+  stroke-width: 1;
+  
+  .chart {
+    fill: #FFBFE5;
+    
+    .hover-region {
+      .boundary {
+        stroke-opacity: 0;
+      }
+
+      .line {
+        stroke-width: 10;
+        stroke: gray;
+        stroke-opacity: 0;
+      }
+      
+      &:hover {
+        .line {
+          stroke-opacity: 0.5;
+        }
+      }
+    }
+
+    .area {
+      stroke: purple;
+      fill: purple;
+    }
+
+    .line {
+      stroke: orange;
+      fill: none;
+    }
+    
+    .engagement {
+      &.area {
+        stroke: #45AC52; //green
+        fill: #45AC52;
+      }
+      
+      &.line {
+        stroke: #10A028; //darker green
+      }
+    }
+    
+    .responsesPlusComments {
+      &.area {
+        stroke: #1C64AE; //blue
+        fill: #1C64AE;
+      }
+      
+      &.line {
+        stroke: #1960B1; //darker blue
+      }
+    }
+    
+    .responses {
+      &.area {
+        stroke: #FC6023; //orange
+        fill: #FC6023;
+      }
+      
+      &.line {
+        stroke: #FC6024; //darker orange
+      }
+    }
+  }
+}

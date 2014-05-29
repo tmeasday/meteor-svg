@@ -1,0 +1,14 @@
+<template name="graph1">
+    <svg id="graph1"
+         version="1.1"
+         baseProfile="full"
+         width="{{width}}px" height="{{height}}px" 
+         xmlns="http://www.w3.org/2000/svg">
+
+      <rect width="100%" height="100%" />
+      <polygon points="0 {{height}}, {{poly}}, {{width}} {{height}}"/>
+      <polyline points="{{poly}}" />
+      <path d="{{line}}" stroke="orange" fill="none" />
+    </svg>
+    <pre>{{line}}</pre>
+</template>
