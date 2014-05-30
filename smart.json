@@ -1,6 +1,9 @@
 {
   "packages": {
     "moment": {},
-    "underscore-string-latest": {}
+    "underscore-string-latest": {},
+    "interpolated-helper": {
+      "git": "https://github.com/tmeasday/interpolated-helper.git"
+    }
   }
 }

@@ -3,7 +3,11 @@
   "dependencies": {
     "basePackages": {
       "moment": {},
-      "underscore-string-latest": {}
+      "underscore-string-latest": {},
+      "interpolated-helper": {
+        "git": "https://github.com/tmeasday/interpolated-helper.git",
+        "branch": "master"
+      }
     },
     "packages": {
       "moment": {
@@ -15,6 +19,11 @@
         "git": "https://github.com/TimHeckel/meteor-underscore-string.git",
         "tag": "v2.3.3",
         "commit": "4a5d70eee48fbd90a6e6fc78747250d704a0b3bb"
+      },
+      "interpolated-helper": {
+        "git": "https://github.com/tmeasday/interpolated-helper.git",
+        "branch": "master",
+        "commit": "eac2fec3e39c8fec51b8eca5b00778db32c39177"
       }
     }
   }

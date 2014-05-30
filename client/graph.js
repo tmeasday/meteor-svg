@@ -5,6 +5,53 @@ var TICK_SIZE = 5;
 var Y_TICK_COUNT = 5;
 var X_TICK_COUNT = 7;
 
+// ---------- Interpolation
+
+interpolate = function(f, x, y) {
+  return x + f * (y - x);
+}
+
+interpolateField = function(name) {
+  return function(f, x, y) {
+    var result = {}
+    result[name] = interpolate(f, x[name], y[name]);
+    return _.extend({}, x, result);
+  }
+}
+
+interpolateFields = function(names) {
+  return function(f, x, y) {
+    var result = {}
+
+    names.forEach(function(name) {
+      result[name] = interpolate(f, x[name], y[name]);
+    });
+
+    return _.extend({}, x, result);
+  }
+}
+
+interpolateArray = function(itemInterpolator) {
+  return function(f, x, y) {
+    if (x.length !== y.length)
+      throw new Meteor.Error("Can't interpolate arrays of different length!")
+    
+    return _.times(x.length, function(i) {
+      return itemInterpolator(f, x[i], y[i]);
+    })
+  }
+}
+
+interpolateArrayByField = function(name) {
+  return interpolateArray(interpolateField(name));
+}
+
+interpolateArrayByFields = function(names) {
+  return interpolateArray(interpolateFields(names));
+}
+
+//--------------------------
+
 Template.graph.rendered = function() {
   $('.hover-region').qtip({
       content: {
@@ -27,7 +74,7 @@ function createSeries(rawData) {
     {name: 'responsesPlusComments', points: []}, //1
     {name: 'responses', points: []} //2
   ];
-
+  
   rawData.forEach(function(item) {
     series[0].points.push({x: item.day, y: item.responseCount 
       + item.commentCount + item.helpfulCount});
@@ -40,9 +87,9 @@ function createSeries(rawData) {
 }
 
 Template.graph.helpers({
-  rawData: function() {
+  rawData: animate(function() {
     return this.Statistics.find().fetch();
-  },
+  }, _.identity, interpolateArrayByFields(['responseCount', 'commentCount', 'helpfulCount'])),
   mappedData: function() {
     var series = createSeries(this); //this=rawData
     var dimensions = Template.graph._dimensionsForSeries(series, WIDTH, HEIGHT);
@@ -73,7 +120,7 @@ Template.graph.helpers({
 // points: {x, y}
 // returns {area: String (Path), line: String (Path)}
 Template.graph._pathsForPoints = function(points, dimensions) {
-  var interpolation = 'monotone';
+  var interpolation = 'linear';//'monotone';
   var tension = 0.8;
   
   var d3area = d3.svg.area()
@@ -158,7 +205,7 @@ Template.graph._hoverRegions = function(rawData, dimensions) {
       data: EJSON.stringify(rawData[idx])
     }
   });
-},
+}
 
 // ---------- Testing ----------------
 Template.graph.test = {
@@ -178,20 +225,23 @@ Template.graph.test = {
       }
     }
 
+    var ids = [];
+
     var Statistics = new Meteor.Collection(null);
     _.times(7, function(i) {
-      Statistics.insert(randomItem(i));
-    })
+      ids[i] = Statistics.insert(randomItem(i));
+    });
+    
+    Meteor.setInterval(function() {
+      ids.forEach(function(id, idx) {
+        Statistics.update({_id: id}, randomItem(idx));
+      });
+    }, 3000);
     
     return {
       Statistics: Statistics
     }
   }
-}
-
-function getEngagement(statistic) {
-  return statistic.responseCount 
-    + statistic.commentCount + statistic.helpfulCount;
 }
 
 // XXX: copied from verso
