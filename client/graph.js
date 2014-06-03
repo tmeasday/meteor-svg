@@ -5,51 +5,6 @@ var TICK_SIZE = 5;
 var Y_TICK_COUNT = 5;
 var X_TICK_COUNT = 7;
 
-// ---------- Interpolation
-
-interpolate = function(f, x, y) {
-  return x + f * (y - x);
-}
-
-interpolateField = function(name) {
-  return function(f, x, y) {
-    var result = {}
-    result[name] = interpolate(f, x[name], y[name]);
-    return _.extend({}, x, result);
-  }
-}
-
-interpolateFields = function(names) {
-  return function(f, x, y) {
-    var result = {}
-
-    names.forEach(function(name) {
-      result[name] = interpolate(f, x[name], y[name]);
-    });
-
-    return _.extend({}, x, result);
-  }
-}
-
-interpolateArray = function(itemInterpolator) {
-  return function(f, x, y) {
-    if (x.length !== y.length)
-      throw new Meteor.Error("Can't interpolate arrays of different length!")
-    
-    return _.times(x.length, function(i) {
-      return itemInterpolator(f, x[i], y[i]);
-    })
-  }
-}
-
-interpolateArrayByField = function(name) {
-  return interpolateArray(interpolateField(name));
-}
-
-interpolateArrayByFields = function(names) {
-  return interpolateArray(interpolateFields(names));
-}
-
 //--------------------------
 
 Template.graph.rendered = function() {
@@ -89,7 +44,7 @@ function createSeries(rawData) {
 Template.graph.helpers({
   rawData: animate(function() {
     return this.Statistics.find().fetch();
-  }, _.identity, interpolateArrayByFields(['responseCount', 'commentCount', 'helpfulCount'])),
+  }),
   mappedData: function() {
     var series = createSeries(this); //this=rawData
     var dimensions = Template.graph._dimensionsForSeries(series, WIDTH, HEIGHT);
@@ -120,7 +75,7 @@ Template.graph.helpers({
 // points: {x, y}
 // returns {area: String (Path), line: String (Path)}
 Template.graph._pathsForPoints = function(points, dimensions) {
-  var interpolation = 'linear';//'monotone';
+  var interpolation = 'monotone';
   var tension = 0.8;
   
   var d3area = d3.svg.area()

@@ -23,7 +23,7 @@
       "interpolated-helper": {
         "git": "https://github.com/tmeasday/interpolated-helper.git",
         "branch": "master",
-        "commit": "eac2fec3e39c8fec51b8eca5b00778db32c39177"
+        "commit": "79c90ea8fed60cdc36c4e9e1e8e1961a0c8ea873"
       }
     }
   }
